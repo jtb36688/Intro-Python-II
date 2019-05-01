@@ -2,36 +2,83 @@ from room import Room
 
 # Declare all the rooms
 
+
 room = {
-    'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+    'orcHill': Room("Outside Orc Encampment",
+                    """Before you there are several orc camps, threatening to raid the elf city. 
+    To the south, is the elf city Kelethin"""),
 
-    'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east."""),
+    'kelethinOL': Room("Orc Lift",
+                       """North of you, the orc encampment beckons.
+                      To the west, is the closest lift to enter the treetop elf city Kelethin. 
+                      To the south, are the other lifts to reach the city."""),
 
-    'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
-into the darkness. Ahead to the north, a light flickers in
-the distance, but there is no way across the chasm."""),
+    'kelethinPL': Room("Discord Lift",
+                       """North of you is the northern lift to reach the city.
+                      To the west, is the closest lift to enter the treetop elf city Kelethin. 
+                      To the south, is the southern lift to reach the city."""),
 
-    'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
-to north. The smell of gold permeates the air."""),
+    'kelethinNL': Room("Grand Overlook",
+                       """To the north, are the other lifts to reach the city.
+    To the west, is the closest lift to enter the treetop elf city Kelethin.
+    To the south, is the path through the forest of Greater Faydark."""),
 
-    'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
-chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south."""),
+    'gfayPath': Room("Dark Forested Path",
+                     """The bending path follows through the forest of Greater Faydark.
+    To the north is the elf city of Kelethin.
+    To the west the path leads into the Butcherblock mountain range."""),
+
+    'bbpath': Room("Butcherblock Mountains Path",
+                   """The path winds through the expansive Butcherblock Mountains.
+    To the west, the path continues onward into the mountains.
+    To the east, the path leads into the mouth of the Greater Faydark forest."""),
+
+    'crossroads': Room("Butcherblock Mountains Crossroads",
+                    """The path has lead to a three-split crossroad, where there is a nearby dwarf encampment.
+    To the north, the path continues to the dwarf city of Kaladim.
+    To the south, the path leads to an dark and spooky mansion.
+    to the east, the path leads onward towards a forest."""),
+
+    'unrest': Room("Estate of Unrest",
+                   """The path has ended at a spooky mansion. 
+    There are skeletons and zombies suddenly surrounding you from every direction.
+    You shouldn't have come here!"""
+                   ),
+
+    'kaladim': Room("Dwarf City of Kaladim",
+                    """You have entered the dwarf city of Kaladim, which is dug deep into the mountainside.
+    The place looks fancy for being inside a mine, with marble buildings and forges where smiths are working.
+    To the north, the path leads past several shops into the Kaladim Warrior's guild.
+    To the south, the path leads out into the Butcherblock Mountain Range."""),
+
+    "warriorguild": Room("Dwarf Warrior Guild",
+    """You have entered the dwarven warrior guild. 
+    The guildmaster Canloe Nusback nods at you from the a table at the back of the guild.
+    The exit back to Kaladim is to the south."""
+    )
 }
 
 
 # Link rooms together
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+room['orcHill'].s_to = room['kelethinOL']
+room['kelethinOL'].s_to = room['keletinPL']
+room['kelethinOL'].n_to = room['orcHill']
+room['kelethinPL'].s_to = room['keletinNL']
+room['kelethinPL'].n_to = room['kelethinOL']
+room['kelethinNL'].s_to = room['gfayPath']
+room['kelethinNL'].n_to = room['kelethinPL']
+room['gfayPath'].n_to = room['keletinNL']
+room['gfayPath'].w_to = room['bbpath']
+room['bbpath'].w_to = room['crossroads']
+room['bbpath'].e_to = room['gfayPath']
+room['crossroads'].s_to = room['unrest']
+room['crossroads'].e_to = room['bbpath']
+room['crossroads'].n_to = room['kaladim']
+room['kaladim'].s_to = room['crossroads']
+room['kaladim'].n_to = room['warriorguild']
+room['warriorguild'].s_to = room['kaladim']
+
 
 #
 # Main
@@ -49,3 +96,15 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+Thorin = Player("Thorin", "Dwarf", 0, 1, [
+                "Rusty Mace", "Cloth Tunic", "Cloth Pants"], ["Bread", "Bread", "Water", "Water"])
+
+
+class ItemPrinter:
+    def __init__(self):
+        pass
+
+    def print_contents(self):
+        for i in self.inventory:
+            print(i)
