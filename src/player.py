@@ -1,6 +1,6 @@
 
 from lib import NameInventory
-from adv import room['crossroads']
+
 # Write a class to hold player information, e.g. what room they are in
 # currently.
 

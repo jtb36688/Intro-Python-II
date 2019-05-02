@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from player import Dwarfy
 from item import Item
 
 
@@ -61,6 +62,16 @@ room = {
                          )
 }
 
+start_location = {
+    dwarf: room['orcHill'],
+    elf: room['gfayPath'],
+};
+
+function makePlayer(name,type):
+    def __init__(self,type):
+        if type == 'dwarf':
+            return Dwarf(name,start_location[type])
+
 
 # Link rooms together
 
@@ -86,8 +97,7 @@ room['warriorguild'].s_to = room['kaladim']
 #
 # Main
 
-player = Player("Thorin", "Dwarf", 0, 1, [
-                "Rusty Mace", "Cloth Tunic", "Cloth Pants"], ["Bread", "Bread", "Water", "Water"])
+player = Dwarfy("Thorin", room['crossroads']);
 
 
 # Make a new player object that is currently in the 'outside' room.
