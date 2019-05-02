@@ -1,4 +1,7 @@
 from room import Room
+from player import Player
+from item import Item
+
 
 # Declare all the rooms
 
@@ -34,7 +37,7 @@ room = {
     To the east, the path leads into the mouth of the Greater Faydark forest."""),
 
     'crossroads': Room("Butcherblock Mountains Crossroads",
-                    """The path has lead to a three-split crossroad, where there is a nearby dwarf encampment.
+                       """The path has lead to a three-split crossroad, where there is a nearby dwarf encampment.
     To the north, the path continues to the dwarf city of Kaladim.
     To the south, the path leads to an dark and spooky mansion.
     to the east, the path leads onward towards a forest."""),
@@ -52,23 +55,23 @@ room = {
     To the south, the path leads out into the Butcherblock Mountain Range."""),
 
     "warriorguild": Room("Dwarf Warrior Guild",
-    """You have entered the dwarven warrior guild. 
+                         """You have entered the dwarven warrior guild. 
     The guildmaster Canloe Nusback nods at you from the a table at the back of the guild.
     The exit back to Kaladim is to the south."""
-    )
+                         )
 }
 
 
 # Link rooms together
 
 room['orcHill'].s_to = room['kelethinOL']
-room['kelethinOL'].s_to = room['keletinPL']
+room['kelethinOL'].s_to = room['kelethinPL']
 room['kelethinOL'].n_to = room['orcHill']
-room['kelethinPL'].s_to = room['keletinNL']
+room['kelethinPL'].s_to = room['kelethinNL']
 room['kelethinPL'].n_to = room['kelethinOL']
 room['kelethinNL'].s_to = room['gfayPath']
 room['kelethinNL'].n_to = room['kelethinPL']
-room['gfayPath'].n_to = room['keletinNL']
+room['gfayPath'].n_to = room['kelethinNL']
 room['gfayPath'].w_to = room['bbpath']
 room['bbpath'].w_to = room['crossroads']
 room['bbpath'].e_to = room['gfayPath']
@@ -82,9 +85,47 @@ room['warriorguild'].s_to = room['kaladim']
 
 #
 # Main
-#
+
+player = Player("Thorin", "Dwarf", 0, 1, [
+                "Rusty Mace", "Cloth Tunic", "Cloth Pants"], ["Bread", "Bread", "Water", "Water"])
+
 
 # Make a new player object that is currently in the 'outside' room.
+# get_room should get the string input and turn that into a class property
+# 'n' -> current_room.n_to
+
+def get_room(cmd, current_room):
+    if cmd == 'n':
+        return current_room.n_to
+    elif cmd == 's':
+        return current_room.s_to
+    elif cmd == 'e':
+        return current_room.e_to
+    elif cmd == 'w':
+        return current_room.w_to
+
+def get_room2(cmd, current_room):
+    moving = cmd + '_to'
+    return getattr(current_room, moving, None)
+
+
+
+print("Enter n,s,e,w to travel, enter q to quit..")
+
+directions = ["n", "s", "w", "e"]
+
+while True:
+    cmd = input(" -> ")
+    if cmd in directions:
+        new_room = get_room(cmd, player.current_room)
+        if new_room is not None:
+            player.move_player(new_room)
+        else:
+            print("You can't move any further in that direction")
+    elif cmd == 'q':
+        break
+    else:
+        print("I don't know what that means!")
 
 # Write a loop that:
 #
@@ -97,14 +138,11 @@ room['warriorguild'].s_to = room['kaladim']
 #
 # If the user enters "q", quit the game.
 
-Thorin = Player("Thorin", "Dwarf", 0, 1, [
-                "Rusty Mace", "Cloth Tunic", "Cloth Pants"], ["Bread", "Bread", "Water", "Water"])
 
+# class ItemPrinter:
+#     def __init__(self):
+#         pass
 
-class ItemPrinter:
-    def __init__(self):
-        pass
-
-    def print_contents(self):
-        for i in self.inventory:
-            print(i)
+#     def print_contents(self):
+#         for i in self.inventory:
+#             print(i)
