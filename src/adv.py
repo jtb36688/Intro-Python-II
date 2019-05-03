@@ -6,7 +6,7 @@ from item import Item
 room = {
     'orcHill': Room("Outside Orc Encampment",
                     """Before you there are several orc camps, threatening to raid the elf city.\nTo the south, is the elf city Kelethin""",
-                    [['Orc Belt', 'Terribly-smelling belt from a fallen orc']]),
+                    ['Orc Belt']),
 
     'kelethinOL': Room("Orc Lift",
                        """North of you, the orc encampment beckons.\nTo the west, is the closest lift to enter the treetop elf city Kelethin.\nTo the south, are the other lifts to reach the city."""),
@@ -19,14 +19,14 @@ room = {
 
     'gfayPath': Room("Dark Forested Path",
                      """The bending path follows through the forest of Greater Faydark.\nTo the north is the elf city of Kelethin.\nTo the west the path leads into the Butcherblock mountain range.""",
-                         [['Magic Wand', 'It glows faintly with some remaining power']]),
+                     ['Magic Wand']),
 
     'bbpath': Room("Butcherblock Mountains Path",
                    """The path winds through the expansive Butcherblock Mountains.\nTo the west, the path continues onward into the mountains.\nTo the east, the path leads into the mouth of the Greater Faydark forest."""),
 
     'crossroads': Room("Butcherblock Mountains Crossroads",
                        """The path has lead to a three-split crossroad, where there is a nearby dwarf encampment.\nTo the north, the path continues to the dwarf city of Kaladim.\nTo the south, the path leads to an dark and spooky mansion.\nTo the east, the path leads onward towards a forest.""",
-                           [['Blood-covered Note', 'It reads: Dont go to the mansion!']]),
+                       ['Blood-covered Note']),
 
     'unrest': Room("Estate of Unrest",
                    """The path has ended at a spooky mansion.\nThere are skeletons and zombies suddenly surrounding you from every direction.\nYou shouldn't have come here!"""
@@ -43,8 +43,16 @@ room = {
 
 item = {
     "dustynote": Item("Dusty Note", "It reads: You can gain experience by turning orc belts in at Kaladim Warrior Guild."),
-
+    "bloodnote": Item('Blood-covered Note', 'It reads: Dont go to the mansion!'),
+    'magicwand': Item('Magic Wand', 'It glows faintly with some remaining power'),
+    "orcbelt": Item("Orc Belt", "Terribly-smelling belt from a fallen orc")
 }
+
+# 'Blood-covered Note'= item["bloodnote"]
+# 'Magic Wand'= item["magicwand"]
+# "Orc Belt" = item["orcbelt"]
+
+
 
 start_location = {
     'dwarf': room['kaladim'],
@@ -103,16 +111,19 @@ def get_room2(cmd, current_room):
     moving = cmd + '_to'
     return getattr(current_room, moving, None)
 
+
 def intro():
     print("Welcome to the Everquest Faydwer Text Adventure, by Jacob Bryan")
     print("enter character name to continue..")
     global name
     name = input(" -> ")
 
+
 def makePlayer():
     print("do you want to be a Dwarf or an Elf?")
     global race
     race = input(" -> ")
+
 
 directions = ["n", "s", "w", "e"]
 
@@ -120,7 +131,7 @@ while True:
     if 'player' not in globals():
         intro()
         makePlayer()
-        if race == "dwarf" or "elf": 
+        if race == "dwarf" or "elf":
             player = raceOrigins(name, race)
     else:
         print(f"You are {player.name}, level {player.level} {player.race}\nInput N/W/S/E to travel, input USE, EQUIP, GET, DROP -itemname- to interact with items, input Q to quit")
@@ -132,7 +143,7 @@ while True:
                 "The undead are closing in, what do you do? Hint: Type use ITEMNAME to use an item ->")
             # if unrestcmd == "use rusty mace" or unrestcmd == "use rusty dagger"
             #      unrestcmd = input("You fight off one zombie with your weapon and it breaks! What do you do now? ->")
-            if unrestcmd == "use magic wand" and "magic wand" in player.inventory:
+            if unrestcmd == "use magic wand" and "Magic Wand" in player.inventory:
                 print(
                     "The wand glows bright!\n All the dead fall down and become, well, dead again.\nYou escape back into the mountains!")
                 player.move_player(room['crossroads'])
@@ -164,6 +175,14 @@ while True:
                         print(f'You have picked up the {activeItem}!')
                     else:
                         print(f'You cannot find a {activeItem} nearby.')
+                if cmd.split(' ')[0] == 'drop':
+                    activeItem = cmd[5:]
+                    if activeItem in player.inventory:
+                        player.remove_item(activeItem)
+                        player.current_room.add_item(activeItem)
+                        print(f'You have dropped {activeItem} on the ground!')
+                    else:
+                        print(f'You do not own the {activeItem}!')
             elif cmd == 'q':
                 break
             else:
