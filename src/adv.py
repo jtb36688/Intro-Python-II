@@ -1,10 +1,19 @@
 from room import Room
-from player import Player
-from player import Dwarfy
+from player import Dwarf
+from player import Elf
 from item import Item
 
 
-# Declare all the rooms
+itemlists = [
+    ['Orc Belt', 'Terribly-smelling belt from a fallen orc'],
+    ['Dusty Note', 'It reads: You can gain experience by turning orc belts in at Kaladim Warrior Guild.'],
+    ['Magic Wand', 'It glows faintly with some remaining power'],
+    ['Blood-covered Note', 'It reads: Dont go to the mansion!']
+]
+
+items = [Item(item[0], item[1]) for item in itemlists]
+
+print(items)
 
 
 room = {
@@ -22,7 +31,7 @@ room = {
                       To the west, is the closest lift to enter the treetop elf city Kelethin. 
                       To the south, is the southern lift to reach the city."""),
 
-    'kelethinNL': Room("Grand Overlook",
+    'kelethinNL': Room("Newbie Lift",
                        """To the north, are the other lifts to reach the city.
     To the west, is the closest lift to enter the treetop elf city Kelethin.
     To the south, is the path through the forest of Greater Faydark."""),
@@ -63,14 +72,15 @@ room = {
 }
 
 start_location = {
-    dwarf: room['orcHill'],
-    elf: room['gfayPath'],
-};
+    'dwarf': room['kaladim'],
+    'elf': room['kelethinNL'],
+}
 
-function makePlayer(name,type):
-    def __init__(self,type):
-        if type == 'dwarf':
-            return Dwarf(name,start_location[type])
+def makePlayer(name,type):
+    if type == 'dwarf':
+        return Dwarf(name,start_location[type])
+    elif type == 'elf':
+        return Elf(name,start_location[type])
 
 
 # Link rooms together
@@ -97,7 +107,7 @@ room['warriorguild'].s_to = room['kaladim']
 #
 # Main
 
-player = Dwarfy("Thorin", room['crossroads']);
+
 
 
 # Make a new player object that is currently in the 'outside' room.
@@ -119,23 +129,39 @@ def get_room2(cmd, current_room):
     return getattr(current_room, moving, None)
 
 
-
+print("enter character name to continue..")
+name = input(" -> ")
+print("do you want to be a Dwarf or an Elf?")
+race = input(" -> ")
+player = makePlayer(name, race)
 print("Enter n,s,e,w to travel, enter q to quit..")
 
 directions = ["n", "s", "w", "e"]
 
 while True:
-    cmd = input(" -> ")
-    if cmd in directions:
-        new_room = get_room(cmd, player.current_room)
-        if new_room is not None:
-            player.move_player(new_room)
+    print(player.current_room)
+    if player.current_room.name == "Estate of Unrest":
+        unrestcmd = input("The undead are closing in, what do you do? Hint: Type use ITEMNAME to use an item ->")
+        # if unrestcmd == "use rusty mace" or unrestcmd == "use rusty dagger"
+        #      unrestcmd = input("You fight off one zombie with your weapon and it breaks! What do you do now? ->")
+        if unrestcmd == "use magic wand":
+            print("All the dead fall down and become, well, dead again. You escape back into the mountains!")
+            player.move_player(room['crossroads'])
         else:
-            print("You can't move any further in that direction")
-    elif cmd == 'q':
-        break
-    else:
-        print("I don't know what that means!")
+            print("Your foolish attempts to escape are futile. The dead swarm you and you are eaten alive.")
+            break
+    else: 
+        cmd = input(" ->")
+        if cmd in directions:
+            new_room = get_room(cmd, player.current_room)
+            if new_room is not None:
+                player.move_player(new_room)
+            else:
+                print("You can't move any further in that direction")
+        elif cmd == 'q':
+            break
+        else:
+            print("I don't know what that means!")
 
 # Write a loop that:
 #

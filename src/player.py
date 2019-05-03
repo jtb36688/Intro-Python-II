@@ -38,15 +38,21 @@ class Player(NameInventory):
         return f'My name is {self.name}'
 
 class Dwarf(Player):
-    def __init__(self, name, race, equipment, inventory, current_room, level=1, experience_bar=0):
-         super().__init__()
-
-class Dwarfy(Player):
     def __init__(self, name, current_room):
         super().__init__(
             name,
             'Dwarf',
             ["Rusty Mace", "Cloth Tunic", "Cloth Pants"],
-            ["Bread", "Bread", "Water", "Water"],
+            ["Bread", "Bread", "Ale", "Ale"],
+            current_room
+        )
+
+class Elf(Player):
+    def __init__(self, name, current_room):
+        super().__init__(
+            name,
+            'Elf',
+            ["Rusty Dagger", "Leather Tunic", "Leather Pants"],
+            ["Trail Mix", "Trail Mix", "Water", "Water"],
             current_room
         )

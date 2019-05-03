@@ -9,6 +9,6 @@ class Description(NameInventory):
         self.description = description
         #string representation of our class in the console
         #without it: <room.Room object at 0x10c08f4ae> every time
-        def __str__(self):
-            return f'Name: {self.name}\nDescription: {self.description}'
+    def __str__(self):
+        return f'Name: {self.name}\nDescription: {self.description}'
         
