@@ -11,14 +11,17 @@ class Player(NameInventory):
         self.race = race
         self.experience_bar = experience_bar
         self.level = level
-        self.equipment = []
-        self.inventory = []
+        self.equipment = equipment
+        self.inventory = inventory
         self.current_room = current_room
 
     # def equip(self, inventory, index):
 
-    def pick_up(self, item):
+    def add_item(self, item):
         self.inventory.append(item)
+        
+    def remove_item(self, item):
+        self.inventory.remove(item)
 
     def equip(self, item):
         if item in self.inventory:
